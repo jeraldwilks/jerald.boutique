@@ -10,5 +10,7 @@ app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 app.get("/", (request, response) => {
   response.sendFile(__dirname + "/readme.html");
 });
-
+app.get("/favicon.ico", (request, response) => {
+  response.sendFile(__dirname + "/favicon.ico");
+});
 app.get("/addItem", (req, res) => {});
