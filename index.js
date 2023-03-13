@@ -10,4 +10,5 @@ app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 app.get("/", (request, response) => {
   response.sendFile(__dirname + "/readme.html");
 });
-console.log(__dirname);
+
+app.get("/addItem", (req, res) => {});
