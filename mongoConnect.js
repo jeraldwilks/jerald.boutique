@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-mongoose.connect(
-  "mongodb://mongo:PAwK4VesnWEHA567CiVc@containers-us-west-187.railway.app:5709"
-);
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL);
 export const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error: "));
 db.once("open", () => {

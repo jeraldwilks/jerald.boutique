@@ -1,12 +1,14 @@
 import express from "express";
 import path from "path";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 import { db } from "./mongoConnect.js";
 import { itemRouter } from "./itemRouter.js";
 import { itemModel } from "./models.js";
 
+dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 const __dirname = path.resolve();
 app.use(express.json());
 
