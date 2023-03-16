@@ -2,7 +2,6 @@ import express from "express";
 import { itemModel } from "./models.js";
 
 export const itemRouter = express.Router();
-
 itemRouter.post("/", async (req, res) => {
   const item = new itemModel(req.body);
 
@@ -15,7 +14,7 @@ itemRouter.post("/", async (req, res) => {
   }
 });
 itemRouter.get("/", async (req, res) => {
-  const items = await itemModel.find({});
+  const items = await itemModel.find();
   // let tempStr = "";
   // let toSend = "";
   // for (let each of items) {

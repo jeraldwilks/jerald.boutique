@@ -3,7 +3,9 @@ import path from "path";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { itemRouter } from "./itemRouter.js";
-import { itemModel } from "./models.js";
+import { saleRouter } from "./saleRouter.js";
+import { findRouter } from "./findRouter.js";
+// import { itemModel } from "./models.js";
 
 dotenv.config();
 const app = express();
@@ -20,6 +22,7 @@ console.log("Connected to MongoDB");
 // db.once("open", () => {
 //   console.log("Connected to MongoDB successfully");
 // });
+// db.useDb();
 
 app.use(express.json());
 
@@ -33,3 +36,5 @@ app.get("/favicon.ico", (request, response) => {
 });
 
 app.use("/items", itemRouter);
+app.use("/sales", saleRouter);
+app.use("/find", findRouter);

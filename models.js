@@ -12,8 +12,10 @@ const ItemSchema = new mongoose.Schema({
   price: {
     type: Number,
   },
-  cost: Number,
-  createdAt: {
+  cost: {
+    type: Number,
+  },
+  createdOn: {
     type: Date,
     immutable: true,
     default: () => Date.now(),
@@ -25,3 +27,27 @@ ItemSchema.methods.display = function () {
 };
 
 export const itemModel = mongoose.model("Item", ItemSchema);
+
+const SaleSchema = mongoose.Schema({
+  transactionID: {
+    type: Number,
+    min: 1,
+    max: 999999,
+    required: true,
+  },
+  itemsSold: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Item",
+      required: true,
+    },
+  ],
+
+  createdOn: {
+    type: Date,
+    immutable: true,
+    default: () => Date.now(),
+  },
+});
+
+export const saleModel = mongoose.model("Sale", SaleSchema);
