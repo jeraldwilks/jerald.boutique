@@ -11,7 +11,7 @@ itemRouter.post("/", async (req, res) => {
     res.send(item);
   } catch (error) {
     console.log(error.message);
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 });
 itemRouter.get("/", async (req, res) => {
