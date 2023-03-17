@@ -34,7 +34,9 @@ app.get("/", (request, response) => {
 app.get("/favicon.ico", (request, response) => {
   response.sendFile(dirname + "/favicon.ico");
 });
-
+app.get("/Project1.jpg", (request, response) => {
+  response.sendFile(dirname + "/Project1.jpg");
+});
 app.use("/items", itemRouter);
 app.use("/sales", saleRouter);
 app.use("/find", findRouter);

@@ -7,13 +7,15 @@ const ItemSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    default: 0,
+    required: true,
   },
   price: {
     type: Number,
+    required: true,
   },
   cost: {
     type: Number,
+    default: 0,
   },
   createdOn: {
     type: Date,

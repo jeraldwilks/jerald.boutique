@@ -2,17 +2,7 @@ import express from "express";
 import { itemModel } from "./models.js";
 
 export const itemRouter = express.Router();
-itemRouter.post("/", async (req, res) => {
-  const item = new itemModel(req.body);
 
-  try {
-    await item.save();
-    res.send(item);
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).send(error.message);
-  }
-});
 itemRouter.get("/", async (req, res) => {
   const items = await itemModel.find();
   // let tempStr = "";
@@ -28,5 +18,34 @@ itemRouter.get("/", async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.status(500).send(error);
+  }
+});
+
+itemRouter.post("/", async (req, res) => {
+  const item = new itemModel(req.body);
+
+  try {
+    await item.save();
+    res.send(item);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
+itemRouter.patch("/", async (req, res) => {
+  try {
+    const item = await itemModel.findOneAndUpdate(
+      req.body.find,
+      req.body.update,
+      {
+        new: true,
+      }
+    );
+    await item.save();
+    res.send(item);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error.message);
   }
 });
