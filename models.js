@@ -1,9 +1,16 @@
 import mongoose from "mongoose";
 
 const ItemSchema = new mongoose.Schema({
+  createdOn: {
+    type: Date,
+    immutable: true,
+    default: () => Date.now(),
+  },
   sku: {
     type: Number,
-    required: true,
+    min: 100000,
+    max: 999999,
+    immutable: true,
   },
   name: {
     type: String,
@@ -15,12 +22,7 @@ const ItemSchema = new mongoose.Schema({
   },
   cost: {
     type: Number,
-    default: 0,
-  },
-  createdOn: {
-    type: Date,
-    immutable: true,
-    default: () => Date.now(),
+    required: true,
   },
 });
 
@@ -33,8 +35,6 @@ export const itemModel = mongoose.model("Item", ItemSchema);
 const SaleSchema = mongoose.Schema({
   transactionID: {
     type: Number,
-    min: 1,
-    max: 999999,
     required: true,
   },
   itemsSold: [
@@ -53,3 +53,16 @@ const SaleSchema = mongoose.Schema({
 });
 
 export const saleModel = mongoose.model("Sale", SaleSchema);
+
+const CounterSchema = mongoose.Schema({
+  counterName: {
+    type: String,
+    required: true,
+  },
+  nextCount: {
+    type: Number,
+    required: true,
+  },
+});
+
+export const counterModel = mongoose.model("Counter", CounterSchema);
