@@ -36,11 +36,24 @@ itemRouter.post("/", async (req, res) => {
 });
 
 itemRouter.patch("/", async (req, res) => {
-  let toFind = findObjects(req);
   try {
-    const item = await itemModel.findOneAndUpdate(toFind, req.body, {
-      new: true,
-    });
+    let toUpdate = {};
+    if (req.query.name) {
+      toUpdate.name = req.query.name;
+    }
+    if (req.query.price) {
+      toUpdate.price = req.query.price;
+    }
+    if (req.query.cost) {
+      toUpdate.cost = req.query.cost;
+    }
+    const item = await itemModel.findOneAndUpdate(
+      { sku: req.query.sku },
+      toUpdate,
+      {
+        new: true,
+      }
+    );
     await item.save();
     res.send(item);
   } catch (error) {
@@ -189,18 +202,14 @@ function findObjects(req) {
  *      500:
  *        description: Server error
  *  patch:
- *    summary: Search and find one item with query params, update with body JSON
+ *    summary: Search and find by sku, update one or many of name, price or cost
  *    tags: [Items]
  *    parameters:
- *      - in: query
- *        name: id
- *        schema:
- *          type: string
- *        description: ObjectID assigned by MongoDB
  *      - in: query
  *        name: sku
  *        schema:
  *          type: number
+ *        required: true
  *        description: Must be between 100000-999999
  *      - in: query
  *        name: name

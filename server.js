@@ -17,20 +17,17 @@ const options = {
     openapi: "3.0.0",
     info: {
       title: "jerald.boutique",
-      version: "0.3.0",
+      version: "0.3.1",
       description: "Project 1 - Simple Proof of Concept for Sales & Inventory",
     },
-    servers: [
-      {
-        url: "http://localhost:4000",
-      },
-      {
-        url: "https://jerald.boutique",
-      },
-    ],
   },
   apis: ["./routes/*.js"],
 };
+if (process.env.SERVER === "dev") {
+  options.servers = { url: "http://localhost:4000" };
+} else if (process.env.SERVER === "production") {
+  options.servers = { url: "https://jerald.boutique" };
+}
 
 const specs = swaggerJSDoc(options);
 
@@ -41,16 +38,15 @@ app.use(express.json());
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-app.get("/", (request, response) => {
-  response.sendFile(dirname + "/readme.html");
-});
-app.get("/favicon.ico", (request, response) => {
-  response.sendFile(dirname + "/favicon.ico");
-});
-app.get("/Project1.jpg", (request, response) => {
-  response.sendFile(dirname + "/Project1.jpg");
-});
-app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(specs));
+// app.get("/", (request, response) => {
+//   response.sendFile(dirname + "/readme.html");
+// });
+// app.get("/favicon.ico", (request, response) => {
+//   response.sendFile(dirname + "/favicon.ico");
+// });
+// app.get("/Project1.jpg", (request, response) => {
+//   response.sendFile(dirname + "/Project1.jpg");
+// });
+app.use("/", SwaggerUI.serve, SwaggerUI.setup(specs));
 app.use("/items", itemRouter);
 app.use("/sales", saleRouter);
-// app.use("/find", findRouter);

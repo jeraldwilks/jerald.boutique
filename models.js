@@ -33,9 +33,15 @@ ItemSchema.methods.display = function () {
 export const itemModel = mongoose.model("Item", ItemSchema);
 
 const SaleSchema = mongoose.Schema({
+  createdOn: {
+    type: Date,
+    immutable: true,
+    default: () => Date.now(),
+  },
   transactionID: {
     type: Number,
     required: true,
+    immutable: true,
   },
   itemsSold: [
     {
@@ -44,12 +50,6 @@ const SaleSchema = mongoose.Schema({
       required: true,
     },
   ],
-
-  createdOn: {
-    type: Date,
-    immutable: true,
-    default: () => Date.now(),
-  },
 });
 
 export const saleModel = mongoose.model("Sale", SaleSchema);
