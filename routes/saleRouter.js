@@ -60,6 +60,19 @@ saleRouter.patch("/", async (req, res) => {
   }
 });
 
+saleRouter.delete("/", async (req, res) => {
+  try {
+    await saleModel.deleteOne({
+      transactionID: req.query.transactionID,
+    });
+    // await sale.save();
+    res.send(
+      `Sale with TransactionID ${req.query.transactionID} has been deleted`
+    );
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 /**
  * Takes request object and parses it into search string depending on what is passed to it
  * @param {*} req
@@ -219,6 +232,21 @@ async function findObjectIDs(searchSkus) {
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/Sale'
+ *      500:
+ *        description: Server error
+ *  delete:
+ *    summary: Finds by transactionID and deletes
+ *    tags: [Sales]
+ *    parameters:
+ *      - in: query
+ *        name: transactionID
+ *        schema:
+ *          type: number
+ *        required: true
+ *        description: transactionID of object to be deleted
+ *    responses:
+ *      200:
+ *        description: Returns confirmation message
  *      500:
  *        description: Server error
  */
