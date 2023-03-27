@@ -2,14 +2,13 @@ import express from "express";
 import { itemModel, saleModel, counterModel } from "../models.js";
 
 export const saleRouter = express.Router();
+
 saleRouter.get("/", async (req, res) => {
   try {
     let toFind = await findObjects(req);
-    console.log(toFind);
     const sales = await saleModel.find(toFind).populate("itemsSold");
     res.send(sales);
   } catch (error) {
-    console.log(error.message);
     res.status(500).send(error);
   }
 });
@@ -24,14 +23,18 @@ saleRouter.post("/", async (req, res) => {
     sale.itemsSold = await findObjectIDs(req.query.itemsSold);
     await counter.save();
     await sale.save();
+    for (let each of sale.itemsSold) {
+      let item = await itemModel.findOne(each);
+      item.quantity -= 1;
+      await item.save();
+    }
     res.send(
       await saleModel
         .findOne({ transactionID: sale.transactionID })
         .populate("itemsSold")
     );
   } catch (error) {
-    console.log(error.message);
-    res.status(500).send(error);
+    res.status(500).send(error.message);
   }
 });
 
@@ -53,11 +56,15 @@ saleRouter.patch("/", async (req, res) => {
         .populate("itemsSold")
     );
   } catch (error) {
-    console.log(error);
     res.status(500).send(error.message);
   }
 });
 
+/**
+ * Takes request object and parses it into search string depending on what is passed to it
+ * @param {*} req
+ * @returns object with properties matching search request
+ */
 async function findObjects(req) {
   let toFind = {};
   if (req.query.itemsSold) {
@@ -70,7 +77,12 @@ async function findObjects(req) {
   }
   return toFind;
 }
-
+/**
+ * findObjectIDs function takes either a string with one sku or an object with multiple
+ * skus. It returns an array of the ObjectIDs of the items matching those sku(s)
+ * @param {*} searchSkus
+ * @returns itemModel ObjectIDs
+ */
 async function findObjectIDs(searchSkus) {
   let objectIDs = [];
   if (typeof searchSkus === "object") {
@@ -79,6 +91,9 @@ async function findObjectIDs(searchSkus) {
         sku: parseInt(searchSku),
       };
       let item = await itemModel.findOne(searchJSON);
+      if (item == null) {
+        throw Error("Item SKU not found");
+      }
       objectIDs.push(item._id);
     }
   } else {
@@ -86,6 +101,9 @@ async function findObjectIDs(searchSkus) {
       sku: parseInt(searchSkus),
     };
     let item = await itemModel.findOne(searchJSON);
+    if (item == null) {
+      throw Error("Item SKU not found");
+    }
     objectIDs.push(item._id);
   }
   return objectIDs;

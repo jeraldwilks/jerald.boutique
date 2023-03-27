@@ -243,13 +243,6 @@ function findObjects(req) {
  *        schema:
  *          type: number
  *        description: Updated quantity of item
- *    requestBody:
- *      description: Only name, price, cost & quantity can be modified, all other fields are immutable.
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Item'
  *    responses:
  *      200:
  *       description: The item was successfully created, returns updated object
