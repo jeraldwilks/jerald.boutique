@@ -17,7 +17,7 @@ const options = {
     openapi: "3.0.0",
     info: {
       title: "jerald.boutique",
-      version: "0.4.0",
+      version: "0.5.0",
       description: "Project 1 - Simple Proof of Concept for Sales & Inventory",
     },
   },

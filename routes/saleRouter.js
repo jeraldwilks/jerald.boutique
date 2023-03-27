@@ -130,9 +130,6 @@ async function findObjectIDs(searchSkus) {
 async function changeQty(items, qty) {
   for (let each of items) {
     let item = await itemModel.findOne(each);
-    if (item == null) {
-      throw Error("Item SKU not found");
-    }
     item.quantity += qty;
     await item.save();
   }
@@ -212,7 +209,7 @@ async function changeQty(items, qty) {
  *          items:
  *            type: number
  *        required: true
- *        description: Input one or many SKUs sold
+ *        description: Input one or many SKUs sold; auto-decrements item's quantity
  *    responses:
  *      200:
  *        description: Returns new Sale object
@@ -223,7 +220,7 @@ async function changeQty(items, qty) {
  *      500:
  *        description: Server error
  *  patch:
- *    summary: Finds by transactionID and updates with skus
+ *    summary: Finds by transactionID and updates with skus; auto-increments and auto-decrements item's quantity
  *    tags: [Sales]
  *    parameters:
  *      - in: query
