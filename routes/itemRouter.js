@@ -47,6 +47,9 @@ itemRouter.patch("/", async (req, res) => {
     if (req.query.cost) {
       toUpdate.cost = req.query.cost;
     }
+    if (req.query.quantity) {
+      toUpdate.quantity = req.query.quantity;
+    }
     const item = await itemModel.findOneAndUpdate(
       { sku: req.query.sku },
       toUpdate,
