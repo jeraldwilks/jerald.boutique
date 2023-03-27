@@ -23,11 +23,12 @@ saleRouter.post("/", async (req, res) => {
     sale.itemsSold = await findObjectIDs(req.query.itemsSold);
     await counter.save();
     await sale.save();
-    for (let each of sale.itemsSold) {
-      let item = await itemModel.findOne(each);
-      item.quantity -= 1;
-      await item.save();
-    }
+    await changeQty(sale.itemsSold, -1);
+    // for (let each of sale.itemsSold) {
+    //   let item = await itemModel.findOne(each);
+    //   item.quantity -= 1;
+    //   await item.save();
+    // }
     res.send(
       await saleModel
         .findOne({ transactionID: sale.transactionID })
@@ -40,9 +41,12 @@ saleRouter.post("/", async (req, res) => {
 
 saleRouter.patch("/", async (req, res) => {
   try {
+    let sale = await saleModel.findOne({
+      transactionID: req.query.transactionID,
+    });
+    await changeQty(sale.itemsSold, 1);
     let objectIDs = await findObjectIDs(req.query.itemsSold);
-    console.log("objectedIDs: ", objectIDs);
-    const sale = await saleModel.findOneAndUpdate(
+    sale = await saleModel.findOneAndUpdate(
       { transactionID: req.query.transactionID },
       { itemsSold: objectIDs },
       {
@@ -50,6 +54,7 @@ saleRouter.patch("/", async (req, res) => {
       }
     );
     await sale.save();
+    await changeQty(objectIDs, -1);
     res.send(
       await saleModel
         .findOne({ transactionID: sale.transactionID })
@@ -120,6 +125,17 @@ async function findObjectIDs(searchSkus) {
     objectIDs.push(item._id);
   }
   return objectIDs;
+}
+
+async function changeQty(items, qty) {
+  for (let each of items) {
+    let item = await itemModel.findOne(each);
+    if (item == null) {
+      throw Error("Item SKU not found");
+    }
+    item.quantity += qty;
+    await item.save();
+  }
 }
 
 /**
