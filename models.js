@@ -11,6 +11,7 @@ const ItemSchema = new mongoose.Schema({
     min: 100000,
     max: 999999,
     immutable: true,
+    unique: true,
   },
   name: {
     type: String,
@@ -23,6 +24,9 @@ const ItemSchema = new mongoose.Schema({
   cost: {
     type: Number,
     required: true,
+  },
+  quantity: {
+    type: Number,
   },
 });
 

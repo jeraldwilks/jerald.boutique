@@ -24,7 +24,7 @@ itemRouter.post("/", async (req, res) => {
   item.name = req.query.name;
   item.price = req.query.price;
   item.cost = req.query.cost;
-  console.log(item);
+  item.quantity = req.query.quantity;
   try {
     await item.save();
     await counter.save();
@@ -110,6 +110,9 @@ function findObjects(req) {
  *        cost:
  *          type: number
  *          description: cost for wholesale purchase
+ *        quantity:
+ *          type: number
+ *          description: quantity of item in stock
  *
  *      example:
  *        _id: 64135b6be67e48624342393f
@@ -118,6 +121,7 @@ function findObjects(req) {
  *        name: widgets
  *        price: 55.55
  *        cost: 33.33
+ *        quantity: 45
  *
  */
 /**
@@ -192,6 +196,11 @@ function findObjects(req) {
  *          type: number
  *        required: true
  *        description: Wholesale cost of item
+ *      - in: query
+ *        name: quantity
+ *        schema:
+ *          type: number
+ *        description: Quantity of item
  *    responses:
  *      200:
  *       description: The item was successfully created, returns new object
@@ -202,7 +211,7 @@ function findObjects(req) {
  *      500:
  *        description: Server error
  *  patch:
- *    summary: Search and find by sku, update one or many of name, price or cost
+ *    summary: Search and find by sku, update one or many of name, price, cost or quantity
  *    tags: [Items]
  *    parameters:
  *      - in: query
@@ -226,8 +235,13 @@ function findObjects(req) {
  *        schema:
  *          type: number
  *        description: Wholesale cost of item
+ *      - in: query
+ *        name: quantity
+ *        schema:
+ *          type: number
+ *        description: Updated quantity of item
  *    requestBody:
- *      description: Only name, price & cost can be modified, all other fields are immutable.
+ *      description: Only name, price, cost & quantity can be modified, all other fields are immutable.
  *      required: true
  *      content:
  *        application/json:
